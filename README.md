@@ -4,7 +4,7 @@ End-to-end pipeline that maps raw EEG brain signals to natural language
 descriptions of visual concepts, using CLIP as a cross-modal bridge and a
 frozen LLM for text generation.
 
-Built on the [THINGS-EEG2]([https://www.nature.com/articles/s41597-023-02471-x](https://doi.org/10.1016/j.neuroimage.2022.119754))
+Built on the [THINGS-EEG2](https://www.nature.com/articles/s41597-023-02471-x)
 dataset (10 subjects, 17 channels, 250 Hz) as part of a thesis on
 non-invasive brain-to-language decoding.
 
