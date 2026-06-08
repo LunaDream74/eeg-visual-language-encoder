@@ -1,0 +1,56 @@
+# ── Python cache ──────────────────────────────────────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# ── Large data files (store externally or on cloud) ───────────────────────────
+preprocessed_data_250Hz/
+THINGS_clip_embeddings/
+captions_checkpoint.json
+*.npy
+*.pkl
+*.h5
+*.hdf5
+
+# ── Model checkpoints (too large for git) ─────────────────────────────────────
+checkpoints_multi/
+checkpoints_multi_incase_sthbroke/
+checkpoints_stage2/
+checkpoints_stage2_eeg/
+*.pth
+*.pt
+*.ckpt
+
+# ── Experiment history (failed runs, scratch work) ────────────────────────────
+failed/
+phase2_something_broke/
+results_stage1_single_subject/
+
+# ── Claude Code infrastructure (not part of the project) ──────────────────────
+.claude/
+.claude-flow/
+.swarm/
+.mcp.json
+
+# ── IDE / editor ──────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.code-workspace
+
+# ── OS ────────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Secrets / environment ─────────────────────────────────────────────────────
+.env
+.env.*
+*.key
+secrets.json
+
+# ── Misc build artefacts ──────────────────────────────────────────────────────
+dist/
+build/
+*.egg-info/

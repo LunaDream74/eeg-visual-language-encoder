@@ -1,0 +1,21 @@
+# Stage 2 dependencies
+# Install with: pip install -r requirements_stage2.txt
+
+# Core deep learning (already installed for Stage 1)
+torch>=2.0
+numpy
+
+# HuggingFace ecosystem
+transformers>=4.36
+accelerate>=0.24
+
+# 4-bit quantization (Windows native support from 0.41)
+bitsandbytes>=0.41
+
+# Evaluation metrics
+nltk
+rouge-score
+bert-score
+
+# For Colab captioning notebook only (not needed locally)
+# pillow
