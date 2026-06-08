@@ -178,6 +178,45 @@ class MultiSubjectNICEEEGEncoder(nn.Module):
 
         return out
 
+    def encode_backbone(self, x, subject_ids):
+        """
+        Run only the shared feature extractor and return the bottleneck xEEG.
+
+        This is the representation that masked self-supervised pretraining
+        learns to make useful: shared CNN -> flatten (+ subject embedding)
+        -> bottleneck. It deliberately stops BEFORE the subject aligners and
+        CLIP projector, so pretraining shapes exactly the weights that the
+        contrastive stage reuses. Computation mirrors forward() up to the
+        bottleneck; nothing here adds inference-time parameters.
+
+        Args:
+            x           : (B, n_channels, n_timepoints)
+            subject_ids : (B,) 0-indexed subject IDs
+        Returns:
+            xEEG        : (B, nz_dim)
+        """
+        x = x.unsqueeze(1)                       # (B, 1, C, T)
+
+        x = self.temporal_conv(x)
+        x = self.bn1(x)
+        x = F.elu(x)
+
+        x = self.avg_pool(x)
+
+        x = self.spatial_conv(x)
+        x = self.bn2(x)
+        x = F.elu(x)
+        x = self.dropout(x)
+
+        x = x.flatten(1)                         # (B, 2160)
+
+        if self.use_subject_embedding:
+            subj_emb = self.subject_embedding(subject_ids)
+            x = torch.cat([x, subj_emb], dim=1)  # (B, 2224)
+
+        x = self.bottleneck(x)                   # (B, nz_dim)  xEEG
+        return x
+
 
 class InfoNCELoss(nn.Module):
     """InfoNCE (symmetric cross-entropy) loss with learnable temperature."""

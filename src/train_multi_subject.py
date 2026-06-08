@@ -177,6 +177,28 @@ def main(args):
     )
     model = model.to(device)
 
+    # Optionally warm-start from a masked-pretrained encoder.
+    # strict=False so only shared-backbone weights present in the checkpoint
+    # (conv/bn/bottleneck/subject_embedding) transfer; the subject aligners and
+    # CLIP projector keep their fresh init and are learned in this stage.
+    if args.pretrained_path:
+        print(f"\nLoading pretrained encoder: {args.pretrained_path}")
+        ckpt = torch.load(args.pretrained_path, map_location=device)
+        state = ckpt.get('encoder_state_dict', ckpt)
+        missing, unexpected = model.load_state_dict(state, strict=False)
+        loaded = [k for k in state.keys() if k not in unexpected]
+        print(f"  Transferred {len(loaded)} tensors from pretraining")
+        key_backbone = [k for k in missing
+                        if any(s in k for s in ('temporal_conv', 'spatial_conv',
+                                                'bottleneck'))]
+        if key_backbone:
+            print(f"  WARNING: backbone keys NOT loaded: {key_backbone}")
+        if unexpected:
+            print(f"  Note: {len(unexpected)} checkpoint keys ignored")
+        if ckpt.get('recon_loss') is not None:
+            print(f"  Source recon MSE: {ckpt['recon_loss']:.4f} "
+                  f"(epoch {ckpt.get('epoch', '?')})")
+
     # Optimizer with weight decay
     optimizer = torch.optim.AdamW(
         model.parameters(),
@@ -378,6 +400,10 @@ if __name__ == "__main__":
     parser.add_argument('--loss_alpha', type=float, default=0.5,
                        help='Lambda for hybrid loss. Default 0.5 matches ENIGMA.')
     parser.add_argument('--notes', type=str, default=None)
+    parser.add_argument('--pretrained_path', type=str, default=None,
+                       help='Path to a masked-pretrained encoder checkpoint '
+                            '(from masked_pretrain.py). Warm-starts the shared '
+                            'backbone; loaded with strict=False.')
 
     args = parser.parse_args()
 
