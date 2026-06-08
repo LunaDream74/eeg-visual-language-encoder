@@ -46,7 +46,7 @@ EEG signal (17 ch × 250 samples)
 - Shared spatio-temporal CNN (60 filters) → flatten → shared bottleneck (Nz = 184)
 - Per-subject linear aligner — kept simple (single Linear, no activation) following ENIGMA ablations showing that complex aligners hurt multi-subject generalisation
 - Shared MLP projector with skip connection → 768-dim CLIP space
-- Total encoder parameters: ~1.7 M (vs ENIGMA's 2.4 M)
+- Total encoder parameters: ~1.9 M (vs ENIGMA's 2.4 M)
 
 ---
 
