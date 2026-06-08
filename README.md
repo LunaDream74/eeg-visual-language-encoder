@@ -4,7 +4,7 @@ End-to-end pipeline that maps raw EEG brain signals to natural language
 descriptions of visual concepts, using CLIP as a cross-modal bridge and a
 frozen LLM for text generation.
 
-Built on the [THINGS-EEG2](https://www.nature.com/articles/s41597-023-02471-x)
+Built on the [THINGS-EEG2]([https://www.nature.com/articles/s41597-023-02471-x](https://doi.org/10.1016/j.neuroimage.2022.119754))
 dataset (10 subjects, 17 channels, 250 Hz) as part of a thesis on
 non-invasive brain-to-language decoding.
 
@@ -19,9 +19,9 @@ EEG signal (17 ch × 250 samples)
     │
     ▼
 ┌─────────────────────────────────┐
-│  Stage 1 — EEG Encoder          │  ~1.7 M params
+│  Stage 1 — EEG Encoder          │  ~1.9 M params
 │  Shared CNN → bottleneck (Nz=184)│  InfoNCE contrastive loss
-│  Subject aligners → MLP projector│  Top-1: 20.05%
+│  Subject aligners → MLP projector│  Top-1: 20.10%
 └──────────────┬──────────────────┘
                │ 768-dim CLIP embedding
                ▼
@@ -56,8 +56,8 @@ EEG signal (17 ch × 250 samples)
 
 | Metric   | Value   |
 |----------|---------|
-| Top-1    | 20.05 % |
-| Top-5    | —       |
+| Top-1    | 20.10 % |
+| Top-5    | 49.30 % |
 
 Baseline: NICE paper average ~10–12 %. Our model reaches ~193 % of that baseline.  
 (Random chance Top-1 = 0.44 % on the 227-class THINGS test set.)
@@ -255,7 +255,7 @@ python src/eval_stage2.py \
 ## Citation / Related Work
 
 - THINGS-EEG2 dataset: Gifford et al. 2023 — *Sci. Data*
-- ENIGMA (multi-subject EEG encoder): Palazzo et al. 2024
-- NICE (EEG contrastive learning): Chen et al. 2023
+- ENIGMA (multi-subject EEG encoder): Kneeland et al. 2026
+- NICE (EEG contrastive learning): Song et al. 2024
 - Thought2Text (EEG-to-text pipeline): baseline for Stage 2/3
 - LaBraM (masked EEG pretraining): Jiang et al. 2024
